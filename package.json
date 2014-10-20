@@ -1,0 +1,27 @@
+{
+  "name": "json-tcp",
+  "version": "0.0.0",
+  "description": "Send and receive json messages over a TCP connection",
+  "main": "index.js",
+  "dependencies": {
+    "bson": "^0.2.15"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/boljen/node-json-tcp"
+  },
+  "keywords": [
+    "json",
+    "tcp"
+  ],
+  "author": "Christophe Bol",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/boljen/node-json-tcp/issues"
+  },
+  "homepage": "https://github.com/boljen/node-json-tcp"
+}
