@@ -1,5 +1,5 @@
 var BSON = require('bson').BSONPure.BSON;
-<<<<<<< HEAD
+
 var Message = require('./message.js');
 
 function deserializeStream(d, sock) {
@@ -121,31 +121,5 @@ module.exports = function(socket) {
     if (i > -1)
       this._parserBundles.splice(i, 1);
   };
-=======
-
-function deserializeStream(d) {
-  var res = [];
-  var i = 0;
-  while (i < d.length) {
-    i =BSON.deserializeStream(d, i, 1, res, res.length);
-  }
-  return res;
-};
-
-module.exports = function(sock) {
-
-  sock.on('data', function(d) {
-    var data = deserializeStream(d);
-    for (var i = 0; i < data.length; i++) {
-      sock.emit('message', data[i]);
-    }
-  });
-
-  sock.send = function(json) {
-    sock.write(BSON.serialize(json));
-  };
-
-  return sock;
->>>>>>> cfefee04ffa669f3219afa2fbd9f0af61c1d2a8b
 
 };
