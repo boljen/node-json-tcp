@@ -11,56 +11,72 @@ function deserializeStream(d, sock) {
     }
     return res;
   } catch(err) {
-    var error = new Error('bson compileerror');
-    error.code = 'BSON_PARSER';
-    error.object = err;
+    var error = new Error('bson compile error');
+    error.code = 'INVALID_MESSAGE';
+    error.buffer = d;
+    error.bufferIndex = i;
     sock.emit('error', error, d, i);
     return [];
   }
 };
 
-module.exports = function(socket) {
+var basic = module.exports.basic = function (socket) {
+
+    socket.send = socket._send = function(json) {
+      socket.write(BSON.serialize(json));
+    };
+
+    socket.on('data', function(d) {
+      var data = deserializeStream(d, this);
+      for (var i = 0; i < data.length; i++) {
+        socket._parseMessage(data[i]);
+      }
+    });
+
+    socket._parseMessage = function(msg) {
+      this.emit('message', msg);
+    };
+};
+
+module.exports.full = function(socket, state) {
+
+  basic(socket);
 
   socket._replyId = 1;
+  socket._parserBundles = [{}];
 
-  socket._parsers = {};
+  if (state){
+    socket._stateData = state;
+  } else {
+    socket._stateData = {};
+  }
 
-  socket._parserBundles = [];
-
-  // Wrap the data event
-  socket.on('data', function(d) {
-    var data = deserializeStream(d);
-    for (var i = 0; i < data.length; i++) {
-      socket._parseMessage(data[i]);
-    }
-  });
-
-  // Easy to overwrite without having to call an additional eventemitter
   socket._parseMessage = function(msg) {
-    //console.log(msg);
+
     var messageObject = new Message(msg, socket);
 
     if (messageObject.invalid)
       return this.emit('error', new Error('invalid_message'), msg);
 
     if (messageObject.isReply()) {
-      this.emit('r_'+messageObject.getReplyReceiver(), messageObject);
+      this.emit('r_'+messageObject.getReplyReceiver(),
+                messageObject,
+                socket._stateData,
+                socket);
       return;
     } else {
       var type = messageObject.getType();
       var parser = this.getParser(type);
 
       if (parser === undefined) {
-        this.emit('error',new Error('unknown message type: '+type));
+        this.emit('unknown_message', messageObject);
       } else {
-        parser(messageObject);
+        parser(messageObject,
+              socket._stateData,
+              socket);
       }
     }
 
-  };
-
-  socket._send = function(json) {
-    socket.write(BSON.serialize(json));
   };
 
   socket.send = function(type, data, reply, fromReply) {
@@ -88,27 +104,23 @@ module.exports = function(socket) {
   };
 
   socket.addParser = function(type, func, overwrite) {
-    if (this._parsers[type] && !overwrite)
+    if (this._parserBundles[0][type] && !overwrite)
       throw new Error("Parser for type "+type+" already exists");
-    this._parsers[type] = func;
+    this._parserBundles[0][type] = func;
   };
 
   socket.removeParser = function(type) {
-    if (this._parsers[type])
+    if (this._parserBundles[0][type])
       delete this._parsers[type];
   };
 
   socket.getParser = function(type) {
-    if (this._parsers[type] !== undefined) {
-      return this._parsers[type];
-    } else {
-      for (var i = 0; i <this._parserBundles.length; i++) {
-        if (this._parserBundles[i][type] !== undefined) {
-          return this._parserBundles[i][type];
-        }
+    for (var i = 0; i <this._parserBundles.length; i++) {
+      if (this._parserBundles[i][type] !== undefined) {
+        return this._parserBundles[i][type];
       }
-      return undefined;
     }
+    return undefined;
   };
 
   socket.addParserBundle = function(bundle) {
@@ -120,6 +132,10 @@ module.exports = function(socket) {
     var i = this._parserBundles.indexOf(bundle);
     if (i > -1)
       this._parserBundles.splice(i, 1);
+  };
+
+  socket.getState = function() {
+    return this._stateData;
   };
 
 };
