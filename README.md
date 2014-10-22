@@ -58,6 +58,23 @@ Initializing happens the same way as the basic implementation:
 
     jsonTcp.full(socket);
 
+This will implement all the methods required and create an empty state object.
+
+## State
+
+You can manually attach a state object to the socket by adding it to the
+initialization call.
+
+    var yourStateObject = {
+      authorized: false
+    };
+
+    jsonTcp.full(socket, yourStateObject)
+
+If you ever need to access the state, you can call:
+
+    var state = socket.getState();
+
 ### Sending a message
 
 Sending a new message happens with the send command. It needs at least a message
@@ -77,16 +94,18 @@ type, and can take in data as well as a reply callback.
 
 An example would be:
 
-    // Get data for user 1
-    clientSocket.send('get_user', 1, function(replyMessage) {
-      // Get the data
-      console.log(replyMessage.getData())
+    // Send an authorization request
+    clientSocket.send('authorize_request', 'pass', function(reply, state) {
+      var data = reply.getData();
+      if (data.success) {
+        state.authorized = true;
+      }
     });
 
-### Message Types
+### Message Types & Parsers
 
-Every message type can have a parser. That function will be called when the
-socket receives a new message of that type.
+Every message has a type attached to it and you can attach functions to those
+types.
 
     /**
      * @param {string} type
@@ -99,26 +118,30 @@ socket receives a new message of that type.
      * - If true, it will simply override a parser for a certain message.
      */
     socket.addParser = function(type, func, overwrite)
-
-    // Also available
     socket.removeParser = function(type)
     socket.getParser = function(type)
 
-Take our hypothetical example, lets add a parser:
+Take our hypothetical example, lets add a parser to the server:
 
-    serverSocket.addParser('get_user', function(message) {
-        var id = message.getData();
-        message.reply({
-          id: id,
-          username: 'boljen',
-          likes: 'NodeJS',
-        });
+    serverSocket.addParser('authorize_request', function(message, state) {
+
+      var passphrase = message.getData();
+      if (passphrase === 'pass') {
+        state.authorized = true;
+      }
+
+      message.reply({
+        success: (passphrase === 'pass')
+      });
     });
 
 You can also add reply callbacks as the second argument when calling
-message.reply()
+message.reply() as it basically is socket.send but with the message reply type
+pre-specified.
 
-### Unkown message type
+**Important: ** There's one reserved message type: 'reply'
+
+### Unknown message type
 
 When the socket receives a message type it doesn't has a parser for, it will
 emit an "unknown_message" event. You can hook to that event and add a custom
@@ -143,27 +166,26 @@ So now the client gets back a reply
 ### Parser Bundles
 
 Parser bundles are very useful as they allow you to group a list of message
-parser and attach them to a socket with an O(1) algorithm.
+parser and attach them to a socket with an O(1) algorithm. It also allows you to
+easily share that object with other sockets.
 
-Take this bundle for example, implementing the same 'get_user' message type:
+Bundles are regular objects, take for example this bundle:
 
     var bundle = {
+      // A message parser
       'get_user', function(message) {
           var id = message.getData();
           message.reply({
             id: id,
-            username: 'boljen',
-            likes: 'NodeJS',
+            username: 'boljen'
           });
       },
 
-      'delete_user': function(message) {
-        // ...
-      }
+      // Another message parser
+      'delete_user': function(message) {...}
     };
 
-Now we can add that bundle to the socket when for example the connection has
-gone through an authorization procedure.
+Now we can add that bundle to the socket
 
     serverSocket.addParserBundle(bundle);
 
@@ -183,29 +205,12 @@ order is quite simple; the order of the array:
     * ...
     * Last added parser bundle
 
-### Socket State Data
-
-In the example we only used the message object, but every message parser
-  (including the reply parsers) are actually called with three arguments.
-
-    function messageParser(message, state, socket)
-
-While you can always get the latter two arguments through the message object,
-  simply getting them the above way is more easy.
-
-    clientSocket.send('authorize', 'passphrase', function(message, state) {
-        if (message.getData().success === true) {
-          state.authorized = true;
-        }
-    });
-
-You can always attach a custom state object to the socket upon initialization:
-
-    jsonTcp.full(socket, yourCustomStateObject)
-
 ### Todos
 
-* Implement reply timeouts
+* Make an alternate to socket.send and message.reply that returns an object
+  * That can timeout a reply
+  * Emit an event if the reply has happened
+* Implement some unit- and integration testing
 
 ## License
 
