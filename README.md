@@ -60,7 +60,7 @@ Initializing happens the same way as the basic implementation:
 
 This will implement all the methods required and create an empty state object.
 
-## State
+### State
 
 You can manually attach a state object to the socket by adding it to the
 initialization call.
