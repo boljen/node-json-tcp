@@ -8,7 +8,10 @@
     "buffer-to-messages": "^1.1.0"
   },
   "devDependencies": {
-    "grunt": "^0.4.5"
+    "grunt": "^0.4.5",
+    "grunt-mocha-test": "^0.12.2",
+    "mocha": "^2.0.1",
+    "should": "^4.1.0"
   },
   "scripts": {
     "test": "grunt test"
