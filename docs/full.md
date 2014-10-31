@@ -1,8 +1,6 @@
 # full implementation
 
-This adds another layer on top of the socket implementing a message system.
-
-Note that the layer is the same in both the 'clientSocket' and 'serverSocket'
+The full implementation supports message types and offers reply functionality.
 
 ## Initialization
 
