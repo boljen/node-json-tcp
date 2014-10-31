@@ -1,10 +1,11 @@
 {
   "name": "json-tcp",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Send and receive json messages over a TCP connection",
   "main": "index.js",
   "dependencies": {
-    "bson": "^0.2.15"
+    "bson": "^0.2.15",
+    "buffer-to-messages": "^1.1.0"
   },
   "devDependencies": {},
   "scripts": {
@@ -16,7 +17,9 @@
   },
   "keywords": [
     "json",
-    "tcp"
+    "tcp",
+    "bson",
+    "protocol"
   ],
   "author": "Christophe Bol",
   "license": "MIT",

@@ -1,0 +1,9 @@
+-- 1.2.0 --
+
+General
+* Rewrote documentation
+* Added Travis CI to the repository
+
+Basic Implementation
+* Implemented the buffer-to-messages library
+* Created unit tests

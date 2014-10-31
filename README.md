@@ -1,7 +1,6 @@
 # json-tcp (NodeJS)
 
-A JSON-based TCP communication protocol. It basically adds functionality to the
-socket object.
+Send and receive json messages over a TCP connection
 
 ## Install & getting started
 
@@ -9,7 +8,13 @@ socket object.
 
     var jsonTcp = require('json-tcp');
 
-## basic implementation
+## Implementations
+
+* **Basic**: This allows you to send and receive json messages
+* **Full**: This allows you to do the same thing, but requires you to predefine
+  your message types and parsers, and allows reply callbacks.
+
+### basic implementation
 
 Initialize this by calling:
 
@@ -30,7 +35,6 @@ An error event will be called when the received json message is invalid.
     socket.on('error', function(error) {
       if (error.code === 'INVALID_MESSAGE') {
         // error.buffer
-        // error.bufferIndex
       }
     });
 
@@ -46,13 +50,37 @@ Adding your own custom implementation on top of this is quite easy:
       socket._send(obj);
     }
 
-## full implementation
+### full implementation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 This adds another layer on top of the socket implementing a message system.
 
 Note that the layer is the same in both the 'clientSocket' and 'serverSocket'
 
-### Initialization
+#### Initialization
 
 Initializing happens the same way as the basic implementation:
 
@@ -75,7 +103,7 @@ If you ever need to access the state, you can call:
 
     var state = socket.getState();
 
-### Sending a message
+#### Sending a message
 
 Sending a new message happens with the send command. It needs at least a message
 type, and can take in data as well as a reply callback.
@@ -102,7 +130,7 @@ An example would be:
       }
     });
 
-### Message Types & Parsers
+#### Message Types & Parsers
 
 Every message has a type attached to it and you can attach functions to those
 types.
@@ -141,7 +169,7 @@ pre-specified.
 
 **Important: ** There's one reserved message type: 'reply'
 
-### Unknown message type
+#### Unknown message type
 
 When the socket receives a message type it doesn't has a parser for, it will
 emit an "unknown_message" event. You can hook to that event and add a custom
@@ -163,7 +191,7 @@ So now the client gets back a reply
       }
     });
 
-### Parser Bundles
+#### Parser Bundles
 
 Parser bundles are very useful as they allow you to group a list of message
 parser and attach them to a socket with an O(1) algorithm. It also allows you to
@@ -193,7 +221,7 @@ Or remove it from  the socket if the need would arise
 
     serverSocket.removeParserBundle(bundle);
 
-### Parser Lookup Order
+#### Parser Lookup Order
 
 The parser bundles are inside an array and when looking for a message parser,
 the socket will iterate over that array and return the first parser found. The
@@ -211,6 +239,10 @@ order is quite simple; the order of the array:
   * That can timeout a reply
   * Emit an event if the reply has happened
 * Implement some unit- and integration testing
+
+## Test
+
+    grunt test
 
 ## License
 
