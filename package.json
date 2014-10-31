@@ -7,7 +7,9 @@
     "bson": "^0.2.15",
     "buffer-to-messages": "^1.1.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "grunt": "^0.4.5"
+  },
   "scripts": {
     "test": "grunt test"
   },
