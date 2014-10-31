@@ -1,4 +1,4 @@
-var jsonTcp = require('./../')
+/*var jsonTcp = require('./../')
   , EventEmitter = require('events').EventEmitter
 
   , server, client;
@@ -40,3 +40,4 @@ describe('Full Implementation', function() {
 
 
 });
+*/

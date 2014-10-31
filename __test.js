@@ -1,10 +1,27 @@
 var jsonTcp = require('./')
   , net = require('net');
 
-
-var basics = net.createServer(function(c) {
+var server = net.createServer(function(c) {
   jsonTcp.basic(c);
+  c.on('message', function(msg) {
+    console.log(msg);
+    c.unref();
+  });
+}).listen(333);
+var c = net.connect(333);
+jsonTcp.basic(c);
+c.send({
+  test: true,
+  value: 'ok'
+});
+c.send({
+  test: false
+});
+c.setNoDelay(false);
+c.unref();server.unref();
 
+
+/*
   c.on('message', function(msg) {
     console.log(msg);
     c.unref();
@@ -85,3 +102,4 @@ client.addParserBundle({
 });
 
 client.on('error', console.log);
+*/
