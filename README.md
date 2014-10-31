@@ -1,6 +1,6 @@
 # json-tcp (NodeJS)
 
-[![Build Status](https://travis-ci.org/boljen/node-json-tcp.svg)](https://travis-ci.org/boljen/node-json-tcp.svg?branch=master)
+[![Build Status](https://travis-ci.org/boljen/node-json-tcp.svg?branch=master)](https://travis-ci.org/boljen/node-json-tcp)
 
 Send and receive json messages over a TCP connection
 
