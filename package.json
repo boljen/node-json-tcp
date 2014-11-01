@@ -4,7 +4,8 @@
   "description": "Send and receive json messages over a TCP connection",
   "main": "index.js",
   "dependencies": {
-    "bson": "^0.2.15"
+    "bson": "^0.2.15",
+    "buffer-to-messages": "^1.1.0"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

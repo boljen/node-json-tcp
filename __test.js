@@ -2,14 +2,14 @@ var jsonTcp = require('./')
   , net = require('net');
 
 var server = net.createServer(function(c) {
-  jsonTcp.basic(c);
+  jsonTcp.init(c);
   c.on('message', function(msg) {
     console.log(msg);
     c.unref();
   });
 }).listen(333);
 var c = net.connect(333);
-jsonTcp.basic(c);
+jsonTcp.init(c);
 c.send({
   test: true,
   value: 'ok'
