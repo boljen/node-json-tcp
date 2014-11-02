@@ -1,31 +1,25 @@
 var jsonTcp = require('./')
   , net = require('net');
 
-
-var basics = net.createServer(function(c) {
-  jsonTcp.basic(c);
-
+var server = net.createServer(function(c) {
+  jsonTcp.init(c);
   c.on('message', function(msg) {
     console.log(msg);
     c.unref();
-    basics.unref();
-    basics.unref();
   });
-
+}).listen(333);
+var c = net.connect(333);
+jsonTcp.init(c);
+c.send({
+  test: true,
+  value: 'ok'
 });
-basics.listen(1234);
-
-// Setup a client
-var basicc = net.connect({port: 1234});
-jsonTcp.basic(basicc);
-
-basicc.send({
-  json: 'message'
+c.send({
+  test: false
 });
-basicc.unref();
+c.setNoDelay(false);
+c.unref();server.unref();
 
-basics.on('error', console.log);
-basicc.on('error', console.log);
 
 
 // Setup a server
@@ -35,11 +29,16 @@ var s = net.createServer(function(connection) {
   jsonTcp.full(connection, {
     stateAdded: true
   });
+
   connection.on('error', console.log);
+
   // add a message parser to the message 'test'
   connection.addParser('test', function(msg, state) {
 
-    console.log('State: ', state);
+    console.log('State: ', state.getState());
+
+
+
 
     // >> Hello
     console.log(msg.getData());
@@ -58,6 +57,7 @@ var s = net.createServer(function(connection) {
   setTimeout(function() {
     connection.send('test');
   }, 30)
+
 });
 s.listen(8124);
 s.unref();
@@ -68,7 +68,7 @@ var client = net.connect({port: 8124});
 jsonTcp.full(client);
 
 // Send message type 'test' and set data to 'hello'
-client.send('test','hello',function(msg) {
+client.send('test','hello',function(err, msg) {
 
     // >> World
     console.log(msg.getData().message);

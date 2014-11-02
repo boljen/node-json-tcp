@@ -1,9 +1,17 @@
+-- 1.3.0 --
+
+General
+* Refactored documentation
+
+Full
+* Added timeout
+
 -- 1.2.0 --
 
 General
 * Rewrote documentation
 * Added Travis CI to the repository
 
-Basic Implementation
+Basic
 * Implemented the buffer-to-messages library
 * Created unit tests

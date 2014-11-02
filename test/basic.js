@@ -26,7 +26,7 @@ describe('Basic Implementation', function() {
 
   it('Should bind', function() {
       socket = duplexSocketMock();
-      jsonTcp.basic(socket);
+      jsonTcp.init(socket);
       (socket._parseMessage === undefined).should.be.false;
   });
 
@@ -60,7 +60,7 @@ describe('Basic Implementation', function() {
   it('Should emit ::error upon receiving invalid JSON', function(done) {
 
     socket = duplexSocketMock();
-    jsonTcp.basic(socket);
+    jsonTcp.init(socket);
 
     socket.on('error', function(e) {
       done();
