@@ -1,6 +1,7 @@
-# full implementation
+# Full Implementation (on top of basic)
 
-The full implementation supports message types and offers reply functionality.
+The full implementation is built on top of the basic implementation and adds an
+opinionated messaging and reply system on to
 
 ## Initialization
 

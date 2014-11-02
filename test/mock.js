@@ -1,4 +1,4 @@
-/*var EventEmitter = require('events').EventEmitter;
+var EventEmitter = require('events').EventEmitter;
 
 function duplexSocketMock() {
   var socket = new EventEmitter();
@@ -49,4 +49,3 @@ describe('duplexSocketMock', function() {
   });
 
 });
-*/
