@@ -1,6 +1,6 @@
 var framework = require('javascript-protocol-framework')
   , net = require('net')
-  , protocol = require('./../lib/protocol');
+  , protocol = require('./../../lib/protocol');
 
 var proto = new framework.Protocol();
 
