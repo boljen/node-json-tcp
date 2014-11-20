@@ -13,7 +13,7 @@ Send and receive json messages over a TCP connection
 #docs
 
 * [**Basic Implementation**](docs/basic.md)
-* [**Full Implementation**](docs/full.md)
+* [**javascript-protocol-framework**](docs/jpf.md)
 
 ## License
 
