@@ -9,7 +9,7 @@ net.createServer(function(s) {
   var ses = new framework.Session({
     protocol: proto
   });
-  protocol(s, ses);
+  protocol(ses, s);
   ses.send({
     type: 'test',
     data: 'hello',
@@ -23,4 +23,4 @@ var ses = new framework.Session({
 ses.on('test', function(msg, sess) {
   console.log(msg.data)
 })
-protocol(c, ses);
+protocol(ses, c);

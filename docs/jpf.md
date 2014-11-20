@@ -5,4 +5,4 @@ is very straigth forward. Simply get a socket and a session, and then call the
 exported 'protocol' function in this package:
 
     var init = require('json-tcp').protocol;
-    init(socket, session);
+    init(session, instream, [outStream]);
