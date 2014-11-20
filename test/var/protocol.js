@@ -9,11 +9,13 @@ net.createServer(function(s) {
   var ses = new framework.Session({
     protocol: proto
   });
-  protocol(ses, s);
+  protocol(ses, s, s);
+
   ses.send({
     type: 'test',
     data: 'hello',
   });
+
 }).listen(80);
 
 var c = net.connect(80);

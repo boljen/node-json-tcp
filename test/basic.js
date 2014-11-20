@@ -57,7 +57,7 @@ describe('Basic Implementation', function() {
     }).should.throw();
   });
 
-  it('Should emit ::error upon receiving invalid JSON', function(done) {
+  it('Should emit::error upon receiving invalid JSON', function(done) {
 
     socket = duplexSocketMock();
     jsonTcp.init(socket);
