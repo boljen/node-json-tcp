@@ -1,6 +1,6 @@
 {
   "name": "json-tcp",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Send and receive json messages over a TCP connection",
   "main": "index.js",
   "dependencies": {
